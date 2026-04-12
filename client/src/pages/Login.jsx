@@ -1,9 +1,21 @@
 import React from "react";
 import { assets } from "../assets/assets";
 import { Star } from "lucide-react";
-import { SignIn } from '@clerk/clerk-react'
+import { SignIn, useUser } from '@clerk/clerk-react'
+import { Navigate } from 'react-router-dom'
+import Loading from '../components/Loading'
 
 const Login = () => {
+  const { isLoaded, isSignedIn } = useUser()
+
+  if (!isLoaded) {
+    return <Loading />
+  }
+
+  if (isSignedIn) {
+    return <Navigate to='/' replace />
+  }
+
   return (
     <div className="min-h-screen flex flex-col md:flex-row">
       <img
@@ -44,7 +56,15 @@ const Login = () => {
         <span className="md:h-10"></span>
       </div>
       <div className='flex-1 flex items-center justify-center p-6 sm:p-10'>
-                  <SignIn/>
+        <SignIn
+          routing='path'
+          path='/login'
+          withSignUp={true}
+          forceRedirectUrl='/'
+          fallbackRedirectUrl='/'
+          signUpForceRedirectUrl='/'
+          signUpFallbackRedirectUrl='/'
+        />
       </div>
     </div>
   );
