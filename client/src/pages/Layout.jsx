@@ -1,19 +1,20 @@
 import React, { useState } from "react";
 import Sidebar from "../components/Sidebar";
 import { Outlet } from "react-router-dom";
-import { dummyUserData } from "../assets/assets";
+// import { dummyUserData } from "../assets/assets";
 import Loading from "../components/Loading";
 import { Menu, X } from "lucide-react";
+import { useSelector } from "react-redux";
 
 const Layout = () => {
-  const user = dummyUserData;
+  const user = useSelector((state) => state.user.value);
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return user ? (
-    <div className="w-full flex h-screen">
+    <div className="w-full flex h-screen overflow-hidden">
       <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
 
-      <div className="flex-1 bg-slate-50">
+      <div className="flex-1 bg-slate-50 overflow-y-auto">
         <Outlet />
       </div>
       {sidebarOpen ? (

@@ -5,6 +5,7 @@ import fs from "fs";
 import imagekit from "../configs/imagekit.js";
 import Connection from "../models/Connection.js";
 import { inngest } from "../inngest/index.js";
+import Post from '../models/Post.js';
 
 // Get user data using userId
 export const getUserData = async (req, res) => {
@@ -206,8 +207,8 @@ export const sendConnectionRequest = async (req, res) => {
 
         const connection = await Connection.findOne({
             $or: [
-                {rom_user_id: userId, to_user_id: id},
-                {rom_user_id: id, to_user_id: userId},
+                {from_user_id: userId, to_user_id: id},
+                {from_user_id: id, to_user_id: userId},
             ]
         })
 
@@ -239,7 +240,7 @@ export const sendConnectionRequest = async (req, res) => {
 export const getUserConnections = async (req, res) => {
     try{
         const {userId} = await req.auth()
-        const user = await User.findById(userId).populate(' connections followers following')
+        const user = await User.findById(userId).populate('connections followers following')
 
         const connections = user.connections
         const followers = user.followers

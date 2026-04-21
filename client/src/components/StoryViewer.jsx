@@ -1,94 +1,109 @@
-import { BadgeCheck, X } from 'lucide-react'
+import { BadgeCheck, Trash2, X } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 
-const StoryViewer = ({viewStory, setViewStory}) => {
+const StoryViewer = ({ viewStory, setViewStory, onDelete, isOwner }) => {
 
     const [progress, setProgress] = useState(0)
 
-    useEffect(()=>{
-        let timer, progressInteval;
+    useEffect(() => {
+        let timer, progressInterval;
 
-        if(viewStory && viewStory.media_type !== 'video'){
-            setProgress(0)
-
+        if (viewStory && viewStory.media_type !== 'video') {
+            setProgress(0);
             const duration = 10000;
-            const setTime = 100;
+            const tick = 100;
             let elapsed = 0;
 
-            progressInteval = setInterval(()=>{
-                elapsed += setTime;
+            progressInterval = setInterval(() => {
+                elapsed += tick;
                 setProgress((elapsed / duration) * 100);
-            }, setTime);
+            }, tick);
 
-            // Close story after duration(10sec)
-            timer = setTimeout(()=>{
-                setViewStory(null)
-            }, duration)
+            timer = setTimeout(() => {
+                setViewStory(null);
+            }, duration);
         }
 
-        return ()=> {
+        return () => {
             clearTimeout(timer);
-            clearInterval(progressInteval)
-        }
+            clearInterval(progressInterval);
+        };
+    }, [viewStory, setViewStory]);
 
-    }, [viewStory, setViewStory])
+    const handleClose = () => setViewStory(null);
 
-    const handleClose =() => {
-        setViewStory(null)
-    }
-
-    if(!viewStory) return null
+    if (!viewStory) return null;
 
     const renderContent = () => {
-        switch (viewStory.media_type){
+        switch (viewStory.media_type) {
             case 'image':
-                return(
-                    <img src={viewStory.media_url} alt='' className='max-w-full max-h-screen object-contain'/>
-                );
-                case 'video':
-                    return (
-                        <video onEnded={()=>setViewStory(null)} src={viewStory.media_url} className='max-h-screen' controls autoPlay/>
-                    );
-                    case 'text':
-                    return (
-                       <div className='w-full h-full flex items-center justify-center p-8 text-white text-2xl text-center'>
+                return <img src={viewStory.media_url} alt='' className='max-w-full max-h-screen object-contain' />;
+            case 'video':
+                return <video onEnded={() => setViewStory(null)} src={viewStory.media_url} className='max-h-screen' controls autoPlay />;
+            case 'text':
+                return (
+                    <div className='w-full h-full flex items-center justify-center p-8 text-white text-2xl text-center font-medium'>
                         {viewStory.content}
-                       </div>
-                    );
-                default:
-                    return null;
+                    </div>
+                );
+            default:
+                return null;
         }
-    }
+    };
 
-  return (
-    <div className='fixed inset-0 h-screen bg-black bg-opacity-90 z-110 flex items-center justify-center' style={{backgroundColor: viewStory.media_type === 'text' ? viewStory.background_color : '#000000'}}>
-        {/* Progress Bar */}
-        <div className='absolute top-0 left-0 w-full h-1 bg-gray-700'>
-            <div className='h-full bg-white transition-all duration-100 linear' style={{width: `${progress}%`}} >
+    return (
+        <div
+            className='fixed inset-0 h-screen z-[110] flex items-center justify-center'
+            style={{ backgroundColor: viewStory.media_type === 'text' ? viewStory.background_color : '#000000cc' }}
+        >
+            {/* Progress Bar */}
+            {viewStory.media_type !== 'video' && (
+                <div className='absolute top-0 left-0 w-full h-1 bg-white/20'>
+                    <div
+                        className='h-full bg-white transition-all duration-100'
+                        style={{ width: `${progress}%` }}
+                    />
+                </div>
+            )}
 
+            {/* User Info */}
+            <div className='absolute top-5 left-4 flex items-center gap-3 backdrop-blur-md bg-black/40 px-4 py-2 rounded-full'>
+                <img
+                    src={viewStory.user?.profile_picture}
+                    alt=""
+                    className='w-8 h-8 rounded-full object-cover border-2 border-white'
+                />
+                <div className='text-white font-medium flex items-center gap-1'>
+                    <span className='text-sm'>{viewStory.user?.full_name}</span>
+                    <BadgeCheck size={15} className='text-blue-400' />
+                </div>
+            </div>
+
+            {/* Top Right — Delete + Close */}
+            <div className='absolute top-5 right-4 flex items-center gap-2'>
+                {isOwner && (
+                    <button
+                        onClick={(e) => onDelete(e, viewStory._id)}
+                        className='flex items-center gap-1.5 bg-red-500 hover:bg-red-600 text-white text-xs font-semibold px-3 py-2 rounded-full transition-all active:scale-95 shadow'
+                    >
+                        <Trash2 className='w-3.5 h-3.5' />
+                        <span>Delete</span>
+                    </button>
+                )}
+                <button
+                    onClick={handleClose}
+                    className='bg-white/20 hover:bg-white/30 text-white rounded-full p-2 transition backdrop-blur-sm'
+                >
+                    <X className='w-5 h-5' />
+                </button>
+            </div>
+
+            {/* Story Content */}
+            <div className='max-w-[90vw] max-h-[90vh] flex items-center justify-center'>
+                {renderContent()}
             </div>
         </div>
+    );
+};
 
-        {/* User Info - Top Left */}
-        <div className='absolute top-4 left-4 flex items-center space-x-3 p-2 px-4 sm:p-4 sm:px-8 backdrop-blur-2xl rounded bg-black/50'>
-            <img src={viewStory.user?.profile_picture} alt="" className='ize-7 sm:size-8 rounded-full object-cover border border-white'/>
-            <div className='text-white font-medium flex items-center gap-1.5'>
-                <span>{viewStory.user?.full_name}</span>
-                <BadgeCheck size={18}/>
-            </div>
-        </div>
-
-        {/* Close button */}
-        <button onClick={handleClose} className='absolute top-4 right-4 text-white text-3xl font-bold focus: outline-none'>
-            <X className='w-8 h-8 hover:scale-110 transition cursor-pointer'/>
-        </button>
-
-        {/* Content Wrapper */}
-        <div className='max-w-[90vw] max-h-[90vh] flex items-center justify-center'>
-            {renderContent()}
-        </div>
-    </div>
-  )
-}
-
-export default StoryViewer
+export default StoryViewer;
