@@ -1,53 +1,59 @@
 # PingUp 🚀
 
-A full-stack social media web application built with React, Node.js, MongoDB, and Clerk authentication. PingUp lets users connect, share posts, exchange messages in real time, and post 24-hour stories.
+**PingUp** is a full-stack social media platform where users can connect, share posts, chat in real time, and post 24-hour stories — powered by React, Node.js, MongoDB, Clerk, and Brevo email.
 
 ---
 
-## 📸 Features
+## ✨ Features
 
-- 🔐 **Authentication** — Sign up / Sign in via Clerk (Google, Email)
-- 📰 **Feed** — View posts from connections and followed users
-- 📝 **Create Post** — Text, image, or mixed posts with hashtag support
-- ❤️ **Like & Comment** — Like posts and comment in real time
-- 🔗 **Share Posts** — Share to WhatsApp, Twitter/X, Facebook, LinkedIn, Telegram, Instagram
-- 💬 **Real-time Messaging** — Chat with connections via SSE (Server-Sent Events)
-- 🔔 **Pop-up Notifications** — Toast notifications for new messages
-- 📖 **Stories** — 24-hour auto-expiring stories with image/video/text support
-- 🗑️ **Delete Stories** — Manually delete your own stories anytime
-- 🔍 **Discover** — Find and connect with new users
-- 👥 **Connections** — Manage your connections and followers
-- 👤 **Profile** — View and edit your profile
+| Feature | Description |
+|--------|-------------|
+| 🔐 Authentication | Sign up / Sign in with Clerk (Google, Email) |
+| 📰 Feed | Posts from connections and followed users |
+| 📝 Create Post | Text, image, or mixed posts with hashtag support |
+| ❤️ Like & Unlike | Like/unlike posts with real-time toast notifications |
+| 💬 Comments | Add and delete comments on posts |
+| 🔗 Share | Share posts to WhatsApp, Twitter/X, Facebook, LinkedIn, Telegram, Instagram |
+| 📡 Real-time Chat | 1-on-1 messaging using SSE (Server-Sent Events) |
+| 🔔 Notifications | Pop-up toast notifications for new messages |
+| 📖 Stories | 24-hour auto-expiring image/video/text stories |
+| 🗑️ Delete Stories | Manually delete your own story anytime |
+| 👥 Connections | Send, accept connection requests with email notifications |
+| 👤 Profile | View and edit profile, cover photo, bio |
+| 🔍 Discover | Find and follow new users |
+| 📧 Email (Brevo) | Connection request emails + unseen message reminders |
 
 ---
 
 ## 🛠️ Tech Stack
 
 ### Frontend
-| Tech | Purpose |
-|------|---------|
-| React 19 | UI Framework |
-| Vite | Build tool |
-| Tailwind CSS v4 | Styling |
-| Redux Toolkit | State management |
-| React Router v7 | Client-side routing |
-| Clerk React | Authentication |
-| Axios | HTTP requests |
-| React Hot Toast | Notifications |
-| Lucide React | Icons |
-| Moment.js | Date formatting |
+| Library | Version | Purpose |
+|---------|---------|---------|
+| React | 19 | UI Framework |
+| Vite | 8 | Build tool |
+| Tailwind CSS | 4 | Styling |
+| Redux Toolkit | 2 | Global state management |
+| React Router | 7 | Client-side routing |
+| Clerk React | 5 | Authentication |
+| Axios | 1 | HTTP client |
+| React Hot Toast | 2 | Toast notifications |
+| Lucide React | 0.5 | Icons |
+| Moment.js | 2 | Date formatting |
 
 ### Backend
-| Tech | Purpose |
-|------|---------|
-| Node.js + Express 5 | Server |
-| MongoDB + Mongoose | Database |
-| Clerk Express | Auth middleware |
-| ImageKit | Image/video storage |
-| Multer | File uploads |
-| SSE | Real-time messaging |
-| Nodemailer | Email |
-| Inngest | Background jobs |
+| Library | Version | Purpose |
+|---------|---------|---------|
+| Express | 5 | Web server |
+| MongoDB + Mongoose | 9 | Database |
+| Clerk Express | 2 | Auth middleware |
+| ImageKit | 6 | Image/video CDN storage |
+| Multer | 2 | File upload handling |
+| Nodemailer | 8 | Email sending |
+| Brevo SMTP | — | Email delivery service |
+| Inngest | 4 | Background jobs and cron tasks |
+| dotenv | 17 | Environment variables |
+| cors | 2 | Cross-origin resource sharing |
 
 ---
 
@@ -55,62 +61,72 @@ A full-stack social media web application built with React, Node.js, MongoDB, an
 
 ```
 PingUp/
-├── client/                     # React frontend
+├── client/                          # React Frontend (Vite)
 │   ├── public/
 │   ├── src/
-│   │   ├── components/
-│   │   │   ├── PostCard.jsx        # Post with like, comment, share
-│   │   │   ├── StoriesBar.jsx      # Stories strip with delete
-│   │   │   ├── StoryViewer.jsx     # Full-screen story viewer
-│   │   │   ├── StoryModal.jsx      # Create story modal
-│   │   │   ├── Notification.jsx    # Toast notification UI
-│   │   │   ├── Sidebar.jsx         # Navigation sidebar
-│   │   │   ├── RecentMessages.jsx  # Message preview list
-│   │   │   └── ...
-│   │   ├── pages/
-│   │   │   ├── Feed.jsx            # Main feed
-│   │   │   ├── ChatBox.jsx         # 1-on-1 chat
-│   │   │   ├── Messages.jsx        # Messages list
-│   │   │   ├── Profile.jsx         # User profile
-│   │   │   ├── Discover.jsx        # Find new users
-│   │   │   ├── Connections.jsx     # Manage connections
-│   │   │   ├── CreatePost.jsx      # Create a post
-│   │   │   └── Login.jsx           # Auth page
-│   │   ├── features/               # Redux slices
-│   │   │   ├── user/
-│   │   │   ├── messages/
-│   │   │   └── connections/
 │   │   ├── api/
-│   │   │   └── axios.js            # Axios instance
-│   │   └── App.jsx                 # Root with SSE + routes
+│   │   │   └── axios.js             # Axios instance with base URL
+│   │   ├── components/
+│   │   │   ├── Loading.jsx          # Loading spinner
+│   │   │   ├── MenuItems.jsx        # Sidebar nav items
+│   │   │   ├── Notification.jsx     # Custom toast notification UI
+│   │   │   ├── PostCard.jsx         # Post with like, comment, share
+│   │   │   ├── ProfileModal.jsx     # Edit profile modal
+│   │   │   ├── RecentMessages.jsx   # Message preview list
+│   │   │   ├── Sidebar.jsx          # Navigation sidebar
+│   │   │   ├── StoriesBar.jsx       # Horizontal stories strip
+│   │   │   ├── StoryModal.jsx       # Create new story modal
+│   │   │   ├── StoryViewer.jsx      # Full-screen story viewer
+│   │   │   ├── UserCard.jsx         # User info card
+│   │   │   └── UserProfileInfo.jsx  # Profile details section
+│   │   ├── features/                # Redux slices
+│   │   │   ├── user/userSlice.js
+│   │   │   ├── messages/messagesSlice.js
+│   │   │   └── connections/connectionsSlice.js
+│   │   ├── pages/
+│   │   │   ├── Login.jsx            # Auth page (Clerk)
+│   │   │   ├── Layout.jsx           # Root layout with sidebar
+│   │   │   ├── Feed.jsx             # Main post feed
+│   │   │   ├── CreatePost.jsx       # Create a new post
+│   │   │   ├── ChatBox.jsx          # 1-on-1 chat window
+│   │   │   ├── Messages.jsx         # All conversations list
+│   │   │   ├── Profile.jsx          # User profile page
+│   │   │   ├── Connections.jsx      # Manage connections
+│   │   │   └── Discover.jsx         # Discover new users
+│   │   └── App.jsx                  # Root — SSE listener + routes
 │   ├── index.html
 │   ├── vite.config.js
+│   ├── vercel.json
 │   └── package.json
 │
-└── server/                     # Express backend
+└── server/                          # Node.js + Express Backend
     ├── configs/
-    │   ├── db.js                   # MongoDB connection
-    │   ├── imagekit.js             # ImageKit config
-    │   └── multer.js               # File upload config
+    │   ├── db.js                    # MongoDB connection
+    │   ├── imagekit.js              # ImageKit SDK setup
+    │   ├── multer.js                # File upload config
+    │   └── nodeMailer.js            # Brevo SMTP transporter
     ├── controllers/
-    │   ├── postController.js       # Post CRUD + likes + comments
-    │   ├── storyController.js      # Story CRUD + auto-expiry
-    │   ├── messageController.js    # Chat + SSE
-    │   └── userController.js       # User profile + connections
+    │   ├── postController.js        # Post CRUD, likes, comments
+    │   ├── storyController.js       # Story CRUD + expiry filter
+    │   ├── messageController.js     # Chat + SSE stream
+    │   └── userController.js        # User profile, follow, connect
+    ├── inngest/
+    │   └── index.js                 # Background jobs (Inngest)
+    ├── middlewares/
+    │   └── auth.js                  # Clerk protect middleware
     ├── models/
-    │   ├── Post.js                 # Post schema (with comments)
-    │   ├── Story.js                # Story schema (TTL 24hr)
-    │   ├── Message.js              # Message schema
-    │   └── User.js                 # User schema
+    │   ├── User.js
+    │   ├── Post.js                  # Includes comments sub-schema
+    │   ├── Story.js                 # TTL index — auto-deletes at 24hr
+    │   ├── Message.js
+    │   └── Connection.js
     ├── routes/
+    │   ├── userRoutes.js
     │   ├── postRoutes.js
     │   ├── storyRoutes.js
-    │   ├── messageRoutes.js
-    │   └── userRoutes.js
-    ├── middlewares/
-    │   └── auth.js                 # Clerk protect middleware
-    ├── inngest/                    # Background job functions
-    ├── server.js                   # Entry point
+    │   └── messageRoutes.js
+    ├── server.js
+    ├── vercel.json
     └── package.json
 ```
 
@@ -118,26 +134,34 @@ PingUp/
 
 ## ⚙️ Environment Variables
 
-### Client — `client/.env`
+### `client/.env`
 ```env
-VITE_CLERK_PUBLISHABLE_KEY=your_clerk_publishable_key
+VITE_CLERK_PUBLISHABLE_KEY=pk_test_xxxxxxxxxxxxxxxxxxxx
 VITE_API_URL=http://localhost:4000
 ```
 
-### Server — `server/.env`
+### `server/.env`
 ```env
 PORT=4000
-MONGODB_URI=your_mongodb_connection_string
+MONGODB_URI=mongodb+srv://<user>:<password>@cluster.mongodb.net/pingup
 
 # Clerk
-CLERK_SECRET_KEY=your_clerk_secret_key
+CLERK_SECRET_KEY=sk_test_xxxxxxxxxxxxxxxxxxxx
 
 # ImageKit
-IMAGEKIT_PUBLIC_KEY=your_imagekit_public_key
-IMAGEKIT_PRIVATE_KEY=your_imagekit_private_key
-IMAGEKIT_URL_ENDPOINT=https://ik.imagekit.io/your_id
+IMAGEKIT_PUBLIC_KEY=public_xxxxxxxxxxxxxxxxxxxx
+IMAGEKIT_PRIVATE_KEY=private_xxxxxxxxxxxxxxxxxxxx
+IMAGEKIT_URL_ENDPOINT=https://ik.imagekit.io/your_imagekit_id
 
-# Inngest (optional - for background jobs)
+# Brevo SMTP (Email)
+SMTP_USER=your_brevo_login_email@example.com
+SMTP_PASS=your_brevo_smtp_master_password
+SENDER_EMAIL=noreply@yourdomain.com
+
+# App
+FRONTEND_URL=http://localhost:5173
+
+# Inngest
 INNGEST_EVENT_KEY=your_inngest_event_key
 INNGEST_SIGNING_KEY=your_inngest_signing_key
 ```
@@ -148,124 +172,136 @@ INNGEST_SIGNING_KEY=your_inngest_signing_key
 
 ### Prerequisites
 - Node.js 18+
-- MongoDB Atlas account (or local MongoDB)
-- Clerk account → [clerk.com](https://clerk.com)
-- ImageKit account → [imagekit.io](https://imagekit.io)
+- MongoDB Atlas → [mongodb.com/atlas](https://www.mongodb.com/atlas)
+- Clerk → [clerk.com](https://clerk.com)
+- ImageKit → [imagekit.io](https://imagekit.io)
+- Brevo → [brevo.com](https://brevo.com)
+- Inngest → [inngest.com](https://inngest.com)
 
-### Installation
-
-**1. Clone the repository**
+### 1. Clone the repository
 ```bash
 git clone https://github.com/your-username/pingup.git
 cd pingup
 ```
 
-**2. Install server dependencies**
+### 2. Setup the Server
 ```bash
 cd server
 npm install
+# create server/.env with all variables above
+npm run server
+# runs on http://localhost:4000
 ```
 
-**3. Install client dependencies**
+### 3. Setup the Client
 ```bash
 cd ../client
 npm install
-```
-
-**4. Set up environment variables**
-
-Create `.env` files in both `client/` and `server/` directories using the variables listed above.
-
-**5. Run the development servers**
-
-In one terminal (server):
-```bash
-cd server
-npm run server
-```
-
-In another terminal (client):
-```bash
-cd client
+# create client/.env with all variables above
 npm run dev
-```
-
-**6. Open in browser**
-```
-http://localhost:5173
+# runs on http://localhost:5173
 ```
 
 ---
 
-## 📡 API Endpoints
+## 📡 API Reference
 
-### Auth
-All protected routes require `Authorization: Bearer <clerk_token>` header.
+All protected routes require:
+```
+Authorization: Bearer <clerk_token>
+```
 
-### Posts
+### 👤 Users — `/api/user`
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| POST | `/api/post/add` | Create a new post |
-| GET | `/api/post/feed` | Get feed posts |
-| POST | `/api/post/like` | Like / unlike a post |
-| POST | `/api/post/comment/add` | Add a comment |
-| POST | `/api/post/comment/delete` | Delete a comment |
+| GET | `/data` | Get current logged-in user |
+| POST | `/update` | Update profile / cover photo |
+| POST | `/discover` | Discover new users |
+| POST | `/follow` | Follow a user |
+| POST | `/unfollow` | Unfollow a user |
+| POST | `/connect` | Send connection request |
+| POST | `/accept` | Accept connection request |
+| GET | `/connections` | Get all connections |
+| POST | `/profiles` | Get multiple user profiles |
+| GET | `/recent-messages` | Get recent chat previews |
 
-### Stories
+### 📝 Posts — `/api/post`
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| POST | `/api/story/create` | Create a story |
-| GET | `/api/story/get` | Get active stories |
-| DELETE | `/api/story/delete` | Delete your story |
+| POST | `/add` | Create a post (supports images) |
+| GET | `/feed` | Get feed posts |
+| POST | `/like` | Like / unlike a post |
+| POST | `/comment/add` | Add a comment |
+| POST | `/comment/delete` | Delete a comment |
 
-### Messages
+### 📖 Stories — `/api/story`
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| GET | `/api/message/:userId` | SSE stream for real-time messages |
-| POST | `/api/message/send` | Send a message |
-| POST | `/api/message/get` | Get chat history |
+| POST | `/create` | Create a story |
+| GET | `/get` | Get all active stories |
+| DELETE | `/delete` | Delete your own story |
 
-### Users
+### 💬 Messages — `/api/message`
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| GET | `/api/user/profile` | Get current user profile |
-| PUT | `/api/user/update` | Update profile |
-| POST | `/api/user/connect` | Send connection request |
-| GET | `/api/user/discover` | Discover new users |
+| GET | `/:userId` | SSE stream for real-time messages |
+| POST | `/send` | Send a message |
+| POST | `/get` | Get chat history |
 
 ---
 
-## 🗄️ Database Models
+## 🗄️ Database Schemas
 
-### Story (Auto-expires in 24 hours)
+### User
 ```js
 {
-  user: String (ref: User),
-  content: String,
-  media_url: String,
-  media_type: 'text' | 'image' | 'video',
-  background_color: String,
-  expiresAt: Date  // MongoDB TTL index — auto-deleted after 24hrs
+  _id: String,           // Clerk user ID
+  email: String,
+  full_name: String,
+  username: String,
+  bio: String,
+  profile_picture: String,
+  cover_photo: String,
+  location: String,
+  followers: [String],
+  following: [String],
+  connections: [String]
 }
 ```
 
-### Post (with Comments)
+### Post (with embedded Comments)
 ```js
 {
-  user: String (ref: User),
+  user: String,          // ref: User
   content: String,
   image_urls: [String],
   post_type: 'text' | 'image' | 'text_with_image',
   likes_count: [String],
-  comments: [{ user, text, createdAt }]
+  comments: [{
+    user: String,        // ref: User
+    text: String,
+    createdAt: Date
+  }]
+}
+```
+
+### Story (Auto-deletes after 24 hours)
+```js
+{
+  user: String,          // ref: User
+  content: String,
+  media_url: String,
+  media_type: 'text' | 'image' | 'video',
+  background_color: String,
+  expiresAt: Date        // MongoDB TTL index
 }
 ```
 
 ### Message
 ```js
 {
-  from_user_id: String (ref: User),
-  to_user_id: String (ref: User),
+  from_user_id: String,  // ref: User
+  to_user_id: String,    // ref: User
   text: String,
   message_type: 'text' | 'image',
   media_url: String,
@@ -273,33 +309,73 @@ All protected routes require `Authorization: Bearer <clerk_token>` header.
 }
 ```
 
+### Connection
+```js
+{
+  from_user_id: String,  // ref: User
+  to_user_id: String,    // ref: User
+  status: 'pending' | 'accepted'
+}
+```
+
 ---
 
-## 🚢 Deployment
+## 📧 Email Setup (Brevo)
 
-Both client and server include `vercel.json` for Vercel deployment.
+PingUp sends transactional emails via **Brevo** SMTP.
 
-**Deploy server:**
+**Emails sent automatically:**
+- New connection request notification
+- 24-hour reminder if connection request not accepted
+- Daily digest of unseen messages (9am EST cron job)
+
+**Setup:**
+1. Go to [brevo.com](https://brevo.com) → create a free account
+2. Go to **SMTP & API** → **SMTP** tab
+3. Copy **Login** → `SMTP_USER` and **Master password** → `SMTP_PASS`
+4. Add and verify a sender email address → `SENDER_EMAIL`
+5. Paste all values into `server/.env`
+
+---
+
+## ⚡ Background Jobs (Inngest)
+
+| Function ID | Trigger | Action |
+|-------------|---------|--------|
+| `sync-user-from-clerk` | `clerk/user.created` | Create user in MongoDB |
+| `update-user-from-clerk` | `clerk/user.updated` | Update user in MongoDB |
+| `delete-user-with-clerk` | `clerk/user.deleted` | Delete user from MongoDB |
+| `send-new-connection-request-remainder` | `app/connection-request` | Email + 24hr reminder |
+| `story-delete` | `app/story-delete` | Delete story after 24hr |
+| `send-unseen-messages-notification` | Cron `0 9 * * *` (9am EST) | Daily unseen message email |
+
+---
+
+## 🚢 Deployment (Vercel)
+
+**Deploy Server:**
 ```bash
 cd server
 vercel --prod
 ```
 
-**Deploy client:**
+**Deploy Client:**
 ```bash
 cd client
 npm run build
 vercel --prod
 ```
 
-> After deploying, update `VITE_API_URL` in client env to your server's production URL.
+> After deploying, update `VITE_API_URL` in the Vercel dashboard environment variables to your live server URL.
 
 ---
 
 ## 📄 License
 
-MIT License — feel free to use and modify.
+MIT License — free to use, modify, and distribute.
 
 ---
 
-<p align="center">Built with ❤️ using React + Node.js</p>
+<p align="center">
+  Built with ❤️ using React · Node.js · MongoDB · Clerk · Brevo · ImageKit
+</p>
