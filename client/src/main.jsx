@@ -8,10 +8,19 @@ import { store } from "./app/store.js";
 
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
 
+if (!PUBLISHABLE_KEY) {
+  throw new Error("Missing Clerk Publishable Key");
+}
+
 createRoot(document.getElementById("root")).render(
-  <ClerkProvider publishableKey={PUBLISHABLE_KEY}>
+  <ClerkProvider
+    publishableKey={PUBLISHABLE_KEY}
+    appearance={{
+      variables: { colorPrimary: "#6366f1" },
+    }}
+  >
     <BrowserRouter>
-      <Provider store= {store}>
+      <Provider store={store}>
         <App />
       </Provider>
     </BrowserRouter>
